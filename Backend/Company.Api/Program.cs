@@ -1,3 +1,8 @@
+using Company.Api.ServicesConfiguration;
+using Company.Api.Utilities;
+using Microsoft.AspNetCore.Mvc;
+
+
 namespace Company.Api;
 
 public class Program
@@ -9,9 +14,25 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+        builder.Services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("local", c =>
+                c.AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins("http://localhost:4200"));
+        });
+
+
+        builder.Services.AddAppDbContext(builder.Configuration);
+        builder.Services.AddRepositories();
 
         var app = builder.Build();
 
@@ -22,6 +43,9 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseAppExceptionMiddleware();
+
+        app.UseCors("local");
         app.UseHttpsRedirection();
 
         app.UseAuthorization();

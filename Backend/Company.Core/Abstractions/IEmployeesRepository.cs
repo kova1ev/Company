@@ -3,9 +3,9 @@
 namespace Company.Core.Abstractions;
 public interface IEmployeesRepository
 {
-    Task<Guid> Create(Employee employee);
-    Task<Guid> Delete(Guid id);
     Task<IEnumerable<Employee>> Get();
-    Task<Employee?> GetById(Guid id);
-    Task<Guid> Update(Employee employee);
+    Task<(bool result, Employee? value)> GetById(Guid id);
+    Task<(bool result, Guid value)> Create(Employee employee);
+    Task<(bool result, Guid value)> Update(Employee employee);
+    Task<(bool result, Guid value)> Delete(Guid id);
 }

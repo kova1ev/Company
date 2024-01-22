@@ -1,6 +1,5 @@
 ﻿using Company.Core.Abstractions;
 using Company.Core.Domain;
-using Company.Core.Exceptions;
 using Company.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,48 +23,47 @@ public class EmployeesRepository : IEmployeesRepository
         return employees;
     }
 
-    public async Task<Employee?> GetById(Guid id)
+    public async Task<(bool, Employee?)> GetById(Guid id)
     {
         var entity = await _companyDbContext.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         if (entity == null)
-            return null;
+            return (false, null);
 
-        return EmployeeFromEntity(entity);
+        var employee = EmployeeFromEntity(entity);
+        return (true, employee);
     }
 
-    public async Task<Guid> Delete(Guid id)
+    public async Task<(bool, Guid)> Delete(Guid id)
     {
         var result = await _companyDbContext.Employees.AnyAsync(e => e.Id == id);
         if (result == false)
-            throw new NotFoundException($"Employee with id '{id}' not found");
+            return (result, id);
 
         _companyDbContext.Employees.Remove(new EmployeeEntity { Id = id });
-        await _companyDbContext.SaveChangesAsync();
-        return id;
+        result = await _companyDbContext.SaveChangesAsync() > 0;
+        return (result, id);
     }
 
-
-    public async Task<Guid> Create(Employee employee)
+    public async Task<(bool, Guid)> Create(Employee employee)
     {
         var entity = EmployeeToEntity(employee);
         await _companyDbContext.Employees.AddAsync(entity);
-        await _companyDbContext.SaveChangesAsync();
-        return entity.Id;
+        var result = await _companyDbContext.SaveChangesAsync() > 0;
+        return (result, employee.Id);
     }
 
-    public async Task<Guid> Update(Employee employee)
+    public async Task<(bool, Guid)> Update(Employee employee)
     {
         var result = await _companyDbContext.Employees.AnyAsync(e => e.Id == employee.Id);
         if (result == false)
-            throw new NotFoundException($"Employee with id '{employee.Id}' not found");
+            return (result, employee.Id);
 
         var entity = EmployeeToEntity(employee);
         _companyDbContext.Employees.Update(entity);
-        await _companyDbContext.SaveChangesAsync();
+        result = await _companyDbContext.SaveChangesAsync() > 0;
 
-        return employee.Id;
+        return (result, employee.Id);
     }
-
 
 
     #region private
