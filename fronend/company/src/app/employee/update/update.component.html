@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ Title }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <!--body-->
+
+
+  <div class="d-flex justify-content-center ">
+
+    <form class="col" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+      <!--FullName-->
+      <div class="mb-3">
+        <label for="fullname" class="form-label">Ф.И.О.</label>
+        <input type="text" class="form-control" id="fullname" formControlName="fullName">
+        <div *ngIf="isSubmit &&  fullName?.invalid">
+          <span class="text-danger" *ngIf="fullName?.errors?.['required']">Ф.И.О. обязательный.</span>
+        </div>
+      </div>
+      <!--  Department-->
+      <div class="mb-3">
+        <label for="department" class="form-label">Отдел</label>
+        <input type="text" class="form-control" id="department" formControlName="department">
+        <div *ngIf="isSubmit &&  department?.invalid">
+          <span class="text-danger" *ngIf="department?.errors?.['required']">Отдел обязательный.</span>
+        </div>
+      </div>
+      <!--  Salary-->
+      <div class="mb-3 ">
+        <label class="form-label" for="salary">Заработная плата</label>
+        <input type="number" class="form-control" id="salary" formControlName="salary">
+        <div *ngIf="isSubmit &&  salary?.invalid">
+          <span class="text-danger" *ngIf="salary?.errors?.['required']">Заработная плата обазательна.</span>
+        </div>
+      </div>
+      <!--  DateOfBirth-->
+      <div class="mb-3 ">
+        <label class="form-label" for="dateOfBirth">Дата рождения</label>
+        <input type="date" class="form-control" id="dateOfBirth" formControlName="dateOfBirth"
+               value="{{employee?.dateOfBirth| date:'yyyy-MM-dd'}}">
+        <div *ngIf="isSubmit &&  dateOfBirth?.invalid">
+          <span class="text-danger" *ngIf="dateOfBirth?.errors?.['required']">Дата рождения обязательна.</span>
+        </div>
+      </div>
+      <!--  EmploymentDate-->
+      <div class="mb-3">
+        <label class="form-label" for="employmentDate">Дата приёма на работу</label>
+        <input type="date" class="form-control" id="employmentDate" formControlName="employmentDate">
+        <div *ngIf="isSubmit &&  employmentDate?.invalid">
+          <span class="text-danger"
+                *ngIf="employmentDate?.errors?.['required']">Дата устройства на работу обязательна.</span>
+        </div>
+      </div>
+      <!--     Footer-->
+      <div class="modal-footer justify-content-between">
+        <button type="submit" class="btn btn-outline-success">Отправить</button>
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+

@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ title }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p class="fs-3">Вы действительно хотите удалить?</p>
+  <p>{{ employee?.id }}</p>
+  <p>{{ employee?.fullName }}</p>
+  <p>{{ employee?.department }}</p>
+  <p>{{ employee?.dateOfBirth }}</p>
+  <p>{{ employee?.employmentDate }}</p>
+</div>
+<div class="modal-footer justify-content-between">
+  <button type="button" class="btn btn-outline-danger" (click)="delete()">Удалить</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Закрыть</button>
+</div>
+
+
