@@ -18,7 +18,7 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] SearchParameters searchParameters)
+    public async Task<IActionResult> Get([FromQuery] RequestParameters searchParameters)
     {
         var employees = await _employeesRepository.Get(searchParameters);
 

@@ -16,12 +16,12 @@ public class EmployeesRepository : IEmployeesRepository
     }
 
 
-    public async Task<IEnumerable<Employee>> Get(SearchParameters searchParameters)
+    public async Task<IEnumerable<Employee>> Get(RequestParameters requestParameters)
     {
         var query = _companyDbContext.Employees.AsNoTracking();
 
-        query = Filter(query, searchParameters);
-
+        query = Filter(query, requestParameters);
+        query = Sorting(query, requestParameters);
         var entity = await query.ToListAsync();
 
         var employees = entity.Select(e => EmployeeFromEntity(e)).ToList();
@@ -99,30 +99,66 @@ public class EmployeesRepository : IEmployeesRepository
     }
 
 
-    private static IQueryable<EmployeeEntity> Filter(IQueryable<EmployeeEntity> query, SearchParameters searchParameters)
+    private static IQueryable<EmployeeEntity> Filter(IQueryable<EmployeeEntity> query, RequestParameters requestParameters)
     {
         //filtering
-        if (string.IsNullOrWhiteSpace(searchParameters.FioTerm) == false)
+        if (string.IsNullOrWhiteSpace(requestParameters.FioTerm) == false)
         {
             query = query.Where(e =>
-              EF.Functions.Like(e.FullName!, $"%{searchParameters.FioTerm}%"));
+              EF.Functions.Like(e.FullName!, $"%{requestParameters.FioTerm}%"));
         }
-        if (string.IsNullOrWhiteSpace(searchParameters.DepartmentTerm) == false)
+        if (string.IsNullOrWhiteSpace(requestParameters.DepartmentTerm) == false)
         {
             query = query.Where(e =>
-            EF.Functions.Like(e.Department!, $"%{searchParameters.DepartmentTerm}%"));
+            EF.Functions.Like(e.Department!, $"%{requestParameters.DepartmentTerm}%"));
         }
-        if (searchParameters.SalaryCount != null)
+        if (requestParameters.SalaryCount != null)
         {
-            query = query.Where(e => e.Salary == searchParameters.SalaryCount);
+            query = query.Where(e => e.Salary == requestParameters.SalaryCount);
         }
-        if (searchParameters.BirthTarget != null)
+        if (requestParameters.BirthTarget != null)
         {
-            query = query.Where(e => e.DateOfBirth == DateOnly.FromDateTime(searchParameters.BirthTarget.Value));
+            query = query.Where(e => e.DateOfBirth == DateOnly.FromDateTime(requestParameters.BirthTarget.Value));
         }
-        if (searchParameters.employmentDateTarget != null)
+        if (requestParameters.employmentDateTarget != null)
         {
-            query = query.Where(e => e.EmploymentDate == DateOnly.FromDateTime(searchParameters.employmentDateTarget.Value));
+            query = query.Where(e => e.EmploymentDate == DateOnly.FromDateTime(requestParameters.employmentDateTarget.Value));
+        }
+
+        return query;
+    }
+
+    private static IQueryable<EmployeeEntity> Sorting(IQueryable<EmployeeEntity> query, RequestParameters requestParameters)
+    {
+        switch (requestParameters.Column)
+        {
+            case Column.FullName:
+                query = requestParameters.Sort == Sort.Asc ?
+                    query.OrderBy(e => e.FullName) :
+                    query.OrderByDescending(e => e.FullName);
+                break;
+            case Column.Department:
+                query = requestParameters.Sort == Sort.Asc ?
+                    query.OrderBy(e => e.Department) :
+                    query.OrderByDescending(e => e.Department);
+                break;
+            case Column.Salary:
+                query = requestParameters.Sort == Sort.Asc ?
+                    query.OrderBy(e => e.Salary) :
+                    query.OrderByDescending(e => e.Salary);
+                break;
+            case Column.DateOfBirth:
+                query = requestParameters.Sort == Sort.Asc ?
+                    query.OrderBy(e => e.DateOfBirth) :
+                    query.OrderByDescending(e => e.DateOfBirth);
+                break;
+            case Column.EmploymentDate:
+                query = requestParameters.Sort == Sort.Asc ?
+                    query.OrderBy(e => e.EmploymentDate) :
+                    query.OrderByDescending(e => e.EmploymentDate);
+                break;
+            default:
+                break;
         }
 
         return query;
