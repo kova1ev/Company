@@ -1,5 +1,6 @@
 ﻿using Company.Api.Contracts;
 using Company.Core.Abstractions;
+using Company.Core.Common;
 using Company.Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,9 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] SearchParameters searchParameters)
     {
-        var employees = await _employeesRepository.Get();
+        var employees = await _employeesRepository.Get(searchParameters);
 
         return Ok(employees);
     }
@@ -38,12 +39,6 @@ public class EmployeeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] EmployeeRequest employeeRequest)
     {
-
-        //ModelState.AddModelError("test", "some error validation");
-        //ModelState.AddModelError("test", "some error validation22");
-        //ModelState.AddModelError("ID", "Wrong Id");
-        //return ValidationProblem(ModelState);
-        //return BadRequest(ModelState);
         var newGuid = Guid.NewGuid();
         var employee = CreteEmployeeFromRequest(newGuid, employeeRequest);
         var result = await _employeesRepository.Create(employee);

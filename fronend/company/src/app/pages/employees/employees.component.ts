@@ -5,18 +5,22 @@ import {inject} from "@angular/core/testing";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {UpdateComponent} from "../../employee/update/update.component";
 import {DeleteComponent} from "../../employee/delete/delete.component";
+import {SearchParams} from "../../models/SearchParams";
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css']
 })
+
+
 export class EmployeesComponent implements OnInit {
   employees: Employee[] = [];
 
+  search: SearchParams = new SearchParams();
+
   constructor(private employeeService: EmployeeService,
               private modalService: NgbModal) {
-    // this.employeeService.getData().subscribe(data => this.employees = data)
   }
 
   ngOnInit() {
@@ -24,6 +28,15 @@ export class EmployeesComponent implements OnInit {
     this.employeeService.refreshData.subscribe(a => this.pullEmployees());
   }
 
+  searchEmployee(){
+
+  }
+
+  pullEmployees() {
+    this.employeeService.getEmployees(this.search).subscribe(data => {
+      this.employees = data;
+    });
+  }
 
   openCreateEmployee() {
     const modalRef = this.modalService.open(UpdateComponent);
@@ -41,13 +54,6 @@ export class EmployeesComponent implements OnInit {
     const modalRef = this.modalService.open(DeleteComponent);
     modalRef.componentInstance.employee = employee;
 
-  }
-
-
-  pullEmployees() {
-    this.employeeService.getEmployees().subscribe(data => {
-      this.employees = data;
-    });
   }
 
 }

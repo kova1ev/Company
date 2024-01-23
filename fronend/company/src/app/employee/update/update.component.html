@@ -11,14 +11,6 @@
   <div class="d-flex justify-content-center ">
 
     <form class="col" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-      <!--FullName-->
-      <div class="mb-3">
-        <label for="fullname" class="form-label">Ф.И.О.</label>
-        <input type="text" class="form-control" id="fullname" formControlName="fullName">
-        <div *ngIf="isSubmit &&  fullName?.invalid">
-          <span class="text-danger" *ngIf="fullName?.errors?.['required']">Ф.И.О. обязательный.</span>
-        </div>
-      </div>
       <!--  Department-->
       <div class="mb-3">
         <label for="department" class="form-label">Отдел</label>
@@ -27,12 +19,21 @@
           <span class="text-danger" *ngIf="department?.errors?.['required']">Отдел обязательный.</span>
         </div>
       </div>
+      <!--FullName-->
+      <div class="mb-3">
+        <label for="fullname" class="form-label">Ф.И.О.</label>
+        <input type="text" class="form-control" id="fullname" formControlName="fullName">
+        <div *ngIf="isSubmit &&  fullName?.invalid">
+          <span class="text-danger" *ngIf="fullName?.errors?.['required']">Ф.И.О. обязательный.</span>
+        </div>
+      </div>
       <!--  Salary-->
       <div class="mb-3 ">
         <label class="form-label" for="salary">Заработная плата</label>
         <input type="number" class="form-control" id="salary" formControlName="salary">
         <div *ngIf="isSubmit &&  salary?.invalid">
           <span class="text-danger" *ngIf="salary?.errors?.['required']">Заработная плата обазательна.</span>
+          <span class="text-danger" *ngIf="salary?.errors?.['min']">Заработная плата должна быть больше 0.</span>
         </div>
       </div>
       <!--  DateOfBirth-->

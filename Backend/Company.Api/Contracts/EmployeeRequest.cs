@@ -14,8 +14,8 @@ public class EmployeeRequest
     public string FullName { get; set; }
 
     [Required]
-    [Range(1.0, int.MaxValue)]
-    public decimal Salary { get; set; }
+    [Range(1, int.MaxValue)]
+    public int Salary { get; set; }
 
     [Required]
     public DateOnly DateOfBirth { get; set; }

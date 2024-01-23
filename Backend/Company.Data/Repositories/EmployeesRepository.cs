@@ -1,4 +1,5 @@
 ﻿using Company.Core.Abstractions;
+using Company.Core.Common;
 using Company.Core.Domain;
 using Company.Data.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,15 @@ public class EmployeesRepository : IEmployeesRepository
     }
 
 
-    public async Task<IEnumerable<Employee>> Get()
+    public async Task<IEnumerable<Employee>> Get(SearchParameters searchParameters)
     {
-        var entities = await _companyDbContext.Employees.AsNoTracking().ToListAsync();
-        var employees = entities.Select(e => EmployeeFromEntity(e)).ToList();
+        var query = _companyDbContext.Employees.AsNoTracking();
+
+        query = Filter(query, searchParameters);
+
+        var entity = await query.ToListAsync();
+
+        var employees = entity.Select(e => EmployeeFromEntity(e)).ToList();
 
         return employees;
     }
@@ -90,6 +96,36 @@ public class EmployeesRepository : IEmployeesRepository
             EmploymentDate = employee.EmploymentDate,
             DateOfBirth = employee.DateOfBirth
         };
+    }
+
+
+    private static IQueryable<EmployeeEntity> Filter(IQueryable<EmployeeEntity> query, SearchParameters searchParameters)
+    {
+        //filtering
+        if (string.IsNullOrWhiteSpace(searchParameters.FioTerm) == false)
+        {
+            query = query.Where(e =>
+              EF.Functions.Like(e.FullName!, $"%{searchParameters.FioTerm}%"));
+        }
+        if (string.IsNullOrWhiteSpace(searchParameters.DepartmentTerm) == false)
+        {
+            query = query.Where(e =>
+            EF.Functions.Like(e.Department!, $"%{searchParameters.DepartmentTerm}%"));
+        }
+        if (searchParameters.SalaryCount != null)
+        {
+            query = query.Where(e => e.Salary == searchParameters.SalaryCount);
+        }
+        if (searchParameters.BirthTarget != null)
+        {
+            query = query.Where(e => e.DateOfBirth == DateOnly.FromDateTime(searchParameters.BirthTarget.Value));
+        }
+        if (searchParameters.employmentDateTarget != null)
+        {
+            query = query.Where(e => e.EmploymentDate == DateOnly.FromDateTime(searchParameters.employmentDateTarget.Value));
+        }
+
+        return query;
     }
 
     #endregion

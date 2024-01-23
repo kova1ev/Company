@@ -29,7 +29,7 @@ export class UpdateComponent implements OnInit {
       department: new FormControl<string | null>(this.employee?.department ?? null,
         [Validators.required]),
       salary: new FormControl<number | null>(this.employee?.salary ?? null,
-        [Validators.required]),
+        [Validators.required,Validators.min(1)]),
       dateOfBirth: new FormControl<Date | null>(this.employee?.dateOfBirth ?? null,
         [Validators.required]),
       employmentDate: new FormControl<Date | null>(this.employee?.employmentDate ?? null,
