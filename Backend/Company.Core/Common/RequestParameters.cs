@@ -19,6 +19,6 @@ public class RequestParameters
     public DateTime? BirthTarget { get; set; }
     public DateTime? employmentDateTarget { get; set; }
 
-    public Column Column { get; set; }
-    public Sort Sort { get; set; }
+    public Column? Column { get; set; }
+    public Sort? Sort { get; set; }
 }

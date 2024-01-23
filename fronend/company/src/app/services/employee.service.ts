@@ -3,6 +3,7 @@ import {Employee} from '../models/employee';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, Subject, tap} from 'rxjs';
 import {SearchParams} from "../models/SearchParams";
+import {Column, SortParams} from "../models/sortParams";
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,16 @@ export class EmployeeService {
   }
 
 
-  getEmployees(params?: SearchParams): Observable<Employee[]> {
+  getEmployees(params?: SearchParams, sort?: SortParams): Observable<Employee[]> {
     const query = new HttpParams()
       .set("fioTerm", params?.fioTerm.trim() ?? '')
       .set("departmentTerm", params?.departmentTerm.trim() ?? '')
       .set("salaryCount", params?.salaryCount.trim() ?? '')
       .set("birthTarget", params?.birthTarget ?? '')
-      .set("employmentDateTarget", params?.employmentDateTarget ?? '');
+      .set("employmentDateTarget", params?.employmentDateTarget ?? '')
+      .set('column', sort?.column?.toString() ?? '')
+      .set('sort', sort?.sort?.toString() ?? '');
+    console.log(query)
     return this.httpClient.get<Employee[]>(this.baseUrl, {params: query})
   }
 

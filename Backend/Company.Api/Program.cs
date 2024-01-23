@@ -1,6 +1,7 @@
 using Company.Api.ServicesConfiguration;
 using Company.Api.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 
 namespace Company.Api;
@@ -17,6 +18,7 @@ public class Program
         builder.Services.Configure<JsonOptions>(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

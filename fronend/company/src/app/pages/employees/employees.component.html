@@ -4,31 +4,39 @@
   <table class="table table table-bordered">
     <thead>
     <tr>
-      <th scope="col">Отдел
+      <th scope="col">
+        <div role="button">Отдел
+          <span (click)="sortByDepartment()">{{_sortByDepartment? '&#9660;' : '&#9650;'}}	</span>
+        </div>
         <div>
           <input type="text" [(ngModel)]="search.departmentTerm">
         </div>
       </th>
       <th scope="col">Ф.И.О
+        <span role="button" (click)="sortByFullName()">{{_sortByFullName? '&#9660;' : '&#9650;'}}	</span>
         <div>
           <input type="text" [(ngModel)]="search.fioTerm">
         </div>
       </th>
+      <th scope="col">Заработная плата
+        <span role="button" (click)="sortBySalary()">{{_sortBySalary? '&#9660;' : '&#9650;'}}	</span>
+        <div>
+          <input type="number" [(ngModel)]="search.salaryCount">
+        </div>
+      </th>
       <th scope="col">Дата рождения
+        <span role="button" (click)="sortByBirth()">{{_sortByBirth? '&#9660;' : '&#9650;'}}	</span>
         <div>
           <input type="date" [(ngModel)]="search.birthTarget">
         </div>
       </th>
       <th scope="col">Дата устройства на работу
+        <span role="button" (click)="sortByEmploymentDate()">{{_sortByEmploymentDate? '&#9660;' : '&#9650;'}}	</span>
         <div>
           <input type="date" [(ngModel)]="search.employmentDateTarget">
         </div>
       </th>
-      <th scope="col">Заработная плата &#8381;
-        <div>
-          <input type="number" [(ngModel)]="search.salaryCount">
-        </div>
-      </th>
+
       <th scope="col">Действия</th>
     </tr>
     </thead>
@@ -36,9 +44,9 @@
     <tr *ngFor="let employee of employees">
       <th scope="row">{{ employee.department }}</th>
       <td>{{ employee.fullName }}</td>
+      <td>{{ employee.salary  | number }} &#8381;</td>
       <td>{{ employee.dateOfBirth | date }}</td>
       <td>{{ employee.employmentDate | date }}</td>
-      <td>{{ employee.salary  | number }} &#8381;</td>
       <td>
         <div class="d-flex justify-content-between gap-1">
 
