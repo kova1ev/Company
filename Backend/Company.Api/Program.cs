@@ -36,7 +36,9 @@ public class Program
         builder.Services.AddAppDbContext(builder.Configuration);
         builder.Services.AddRepositories();
 
-        var app = builder.Build();
+
+        WebApplication app = builder.Build();
+        app.ApplyLatestMigration();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -48,12 +50,13 @@ public class Program
         app.UseAppExceptionMiddleware();
 
         app.UseCors("local");
-        app.UseHttpsRedirection();
+        /// app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
 
         app.MapControllers();
+
 
         app.Run();
     }

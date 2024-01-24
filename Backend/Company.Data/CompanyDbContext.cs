@@ -11,6 +11,11 @@ public class CompanyDbContext : DbContext
 
     public DbSet<EmployeeEntity> Employees => Set<EmployeeEntity>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmployeeEntity>()

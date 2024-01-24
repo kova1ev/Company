@@ -9,7 +9,7 @@ public static class AppDbContextConfiguration
     {
         services.AddDbContext<CompanyDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("sqlserver"),
+            options.UseSqlServer(configuration.GetConnectionString("sqlDocker"),
                 a => a.UseDateOnlyTimeOnly());
         });
     }
