@@ -2,8 +2,18 @@ version: '3.4'
 
 networks:
   company_bridge:
-    driver: bridge  
+    driver: bridge
 services:
+  sql:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sql_server2022
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=SUPERsecret777&password
+    networks:
+      - company_bridge
   backend:
     image: ${DOCKER_REGISTRY-}companyapi
     container_name: company-backend
@@ -11,18 +21,21 @@ services:
       context: .
       dockerfile: Backend/Company.Api/Dockerfile
     ports:
-      - "5500:80"
-    networks: 
+      - "7183:80"
+    networks:
       - company_bridge
     depends_on:
       - sql
-  sql:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
-    container_name: sql_server2022
-    ports: 
-      - "1433:1433" 
-    environment:
-      - ACCEPT_EULA=y
-      - SA_PASSWORD=SUPERsecret777&password
-    networks: 
-      - company_bridge
+  # client:
+  #   image: company-client
+  #   container_name: company
+  #   build:
+  #     context: .
+  #     dockerfile: fronend/company/Dockerfile
+  #   ports:
+  #     - "4400:80"
+  #   networks:
+  #     - company_bridge
+  #   depends_on:
+  #     - backend
+    

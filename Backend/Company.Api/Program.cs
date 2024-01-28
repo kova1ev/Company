@@ -27,9 +27,9 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("local", c =>
-                c.AllowAnyHeader()
-                .AllowAnyMethod()
-                .WithOrigins("http://localhost:4200"));
+                c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+                );
+
         });
 
 
