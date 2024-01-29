@@ -31,7 +31,7 @@ services:
   #   container_name: company
   #   build:
   #     context: .
-  #     dockerfile: fronend/company/Dockerfile
+  #     dockerfile: frontend/company/Dockerfile
   #   ports:
   #     - "4400:80"
   #   networks:
